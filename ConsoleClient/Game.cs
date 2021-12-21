@@ -1,4 +1,6 @@
-﻿namespace ConsoleClient;
+﻿using ChessEngine;
+
+namespace ConsoleClient;
 
 public class Game
 {
@@ -10,35 +12,30 @@ public class Game
 
     private Position _position;
 
-    public Game(Position? initialPosition = null)
+    private Game(Position? initialPosition = null)
     {
-        this._position = initialPosition ?? Position.Start;
+        _position = initialPosition ?? Position.InitialPosition;
     }
 
-    public void PrintBoard(int colorToPlay = Piece.Black)
+    private void PrintBoard(int colorToPlay = Color.White)
     {
-        var board = this._position.Board;
-        
-        var (s, e) = colorToPlay == Piece.White ? (8, 0) : (1, 9);
-        var dir = s < e ? 1 : -1;
-
         Console.Write("      ");
         for (int i = 0; i < 8; i++)
         {
-            Console.Write($"  {(char)(colorToPlay == Piece.White ? i + 97 : 104 - i)}   ");
+            Console.Write($"  {(char)(colorToPlay == Color.White ? i + 97 : 104 - i)}   ");
         }
         Console.Write("\n");
         Console.WriteLine("     +-----+-----+-----+-----+-----+-----+-----+-----+");
         
         for (int r = 7; r >= 0; r--)
         {
-            Console.Write($"  {(colorToPlay == Piece.White ? r + 1 : 8 - r)}  |");
+            Console.Write($"  {(colorToPlay == Color.White ? r + 1 : 8 - r)}  |");
             for (int j = 0; j < 8; j++)
             {
-                var row = colorToPlay == Piece.White ? 7 - r : r;
-                var col = colorToPlay == Piece.White ? j : 7 - j;
+                var row = colorToPlay == Color.White ? r : 7 - r;
+                var col = colorToPlay == Color.White ? j : 7 - j;
                 
-                char c = Piece.PieceType(board[row, col]) switch
+                char c = Piece.PieceType(_position.Board[row * 8 + col]) switch
                 {
                     Piece.Pawn => 'p',
                     Piece.Knight => 'n',
@@ -48,7 +45,7 @@ public class Game
                     Piece.King => 'k',
                     _ => ' '
                 };
-                c = Piece.Color(board[row, col]) == Piece.White ? Char.ToUpper(c) : Char.ToLower(c);
+                c = Piece.Color(_position.Board[row * 8 + col]) == Color.White ? Char.ToUpper(c) : Char.ToLower(c);
                 Console.Write($"  {c}  |");
             }
             Console.Write($"  {(colorToPlay == Piece.White ? r + 1 : 8 - r)}\n");
@@ -58,7 +55,7 @@ public class Game
         Console.Write("      ");
         for (int i = 0; i < 8; i++)
         {
-            Console.Write($"  {(char)(colorToPlay == Piece.White ? i + 97 : 104 - i)}   ");
+            Console.Write($"  {(char)(colorToPlay == Color.White ? i + 97 : 104 - i)}   ");
         }
         Console.Write("\n");
         
