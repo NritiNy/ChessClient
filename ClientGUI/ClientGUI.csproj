@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Engine\Engine.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Images\black-bishop.svg" />
+      <None Remove="Images\black-king.svg" />
+      <None Remove="Images\black-knight.svg" />
+      <None Remove="Images\black-pawn.svg" />
+      <None Remove="Images\black-queen.svg" />
+      <None Remove="Images\black-rook.svg" />
+      <None Remove="Images\white-bishop.svg" />
+      <None Remove="Images\white-king.svg" />
+      <None Remove="Images\white-knight.svg" />
+      <None Remove="Images\white-pawn.svg" />
+      <None Remove="Images\white-queen.svg" />
+      <None Remove="Images\white-rook.svg" />
+      <None Remove="Images\black-bishop.png" />
+      <Resource Include="Images\black-bishop.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\black-king.png" />
+      <Resource Include="Images\black-king.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\black-knight.png" />
+      <Resource Include="Images\black-knight.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\black-pawn.png" />
+      <Resource Include="Images\black-pawn.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\black-queen.png" />
+      <Resource Include="Images\black-queen.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\black-rook.png" />
+      <Resource Include="Images\black-rook.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\white-bishop.png" />
+      <Resource Include="Images\white-bishop.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\white-king.png" />
+      <Resource Include="Images\white-king.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\white-knight.png" />
+      <Resource Include="Images\white-knight.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\white-pawn.png" />
+      <Resource Include="Images\white-pawn.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\white-queen.png" />
+      <Resource Include="Images\white-queen.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Images\white-rook.png" />
+      <Resource Include="Images\white-rook.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Resource>
+    </ItemGroup>
+
+</Project>
