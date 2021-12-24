@@ -23,7 +23,7 @@ public readonly  struct Move {
     }
 
     public Move(int start, int target) {
-        _moveValue = (ushort) (start | target << 6);
+        _moveValue = (ushort) (start | (target << 6));
     }
     
     public Move (int start, int target, int flag) {
@@ -33,14 +33,19 @@ public readonly  struct Move {
 
     public ushort Value => _moveValue;
     public int Start => _moveValue & StartMask;
-    public int Target => _moveValue & TargetMask;
+    public int Target => (_moveValue & TargetMask) >> 6;
     public int MoveFlag => _moveValue >> 12;
     public bool IsPromotion => MoveFlag == Flag.PromoteToQueen || MoveFlag == Flag.PromoteToRook ||
                                MoveFlag == Flag.PromoteToKnight || MoveFlag == Flag.PromoteToBishop;
+
+
+    public override string ToString() {
+        return $"{(char)(Start % 8 + 97)}{Start / 8 + 1} {(char)(Target % 8 + 97)}{Target / 8 + 1}";
+    }
     
-    
+
     public bool Equals(Move other) {
-        return _moveValue == other._moveValue;
+        return Start  == other.Start && Target == other.Target;
     }
 
     public override bool Equals(object? obj) {
@@ -49,5 +54,15 @@ public readonly  struct Move {
 
     public override int GetHashCode() {
         return _moveValue.GetHashCode();
+    }
+
+    public static bool operator ==(Move left, Move right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Move left, Move right)
+    {
+        return !(left == right);
     }
 }

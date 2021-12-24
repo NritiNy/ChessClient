@@ -2,21 +2,53 @@
 
 public class Position {
     public static Position InitialPosition => new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-
-
-    public string FenString =>
-        $"{GetFenStringFromBoard()} {(ColorToMove == Piece.White ? 'w' : 'b')} {CastlingAvailability} {EnPassantTarget} {HalfmoveClock} {MoveCounter}";
+    
 
     public int[] Board { get; } = new int[64];
     public int ColorToMove { get; private set; }
     public string CastlingAvailability { get; private set; } = "-";
-    public string EnPassantTarget { get; private set; } = "-";
+    public int EnPassantTarget { get; private set; } = -1;
     public int HalfmoveClock { get; private set; }
     public int MoveCounter { get; private set; }
 
 
+    private readonly List<string> _reachedPositions = new ();
+
+
     public Position(string fenString) {
         ParseFenString(fenString);
+        
+        _reachedPositions.Add(FenString());
+    }
+
+
+    public bool IsLegalMove(Move move) => MoveGenerator.Instance.IsLegalMove(this, ColorToMove, move);
+
+    public int GenerateLegalMoves(out List<Move> moves) {
+        moves = MoveGenerator.Instance.GenerateLegalMoves(this, ColorToMove);
+        return moves.Count;
+    }
+
+
+    public void MakeMove(Move move) {
+        Board[move.Target] = Board[move.Start];
+        Board[move.Start] = Piece.None;
+
+        if (ColorToMove == Color.Black) {
+            MoveCounter++;
+        }
+        ColorToMove = ColorToMove == Color.White ? Color.Black : Color.White;
+        
+        _reachedPositions.Add(FenString());
+    }
+
+    public void UnmakeMove(int nMoves = 1) {
+        for (int i = 0; i < nMoves && i < _reachedPositions.Count; i++) {
+            var fenString = _reachedPositions[^1];
+            _reachedPositions.RemoveAt(_reachedPositions.Count - 1);
+            
+            ParseFenString(fenString);
+        }
     }
 
     private void ParseFenString(string fenString) {
@@ -24,9 +56,15 @@ public class Position {
 
         ColorToMove = segments[1] == "w" ? Piece.White : Piece.Black;
         CastlingAvailability = segments[2];
-        EnPassantTarget = segments[3];
+        EnPassantTarget = -1;
         HalfmoveClock = int.Parse(segments[4]);
         MoveCounter = int.Parse(segments[5]);
+        
+        if (segments[3].Length > 1) {
+            var f = segments[3][0] - 97;
+            var r = (int)char.GetNumericValue(segments[3][0]);
+            EnPassantTarget = r * 8 + f;
+        }
 
         var board = segments[0];
         int file = 0, rank = 7;
@@ -59,17 +97,17 @@ public class Position {
         }
     }
 
-    private string GetFenStringFromBoard() {
-        var fenString = "";
+    public string FenString() {
+        var boardString = "";
 
         int space = 0, rank = 7, file = 0;
         for (int i = 0; i < 64; i++) {
             if (file == 8) {
                 if (space > 0) {
-                    fenString += space.ToString();
+                    boardString += space.ToString();
                     space = 0;
                 }
-                fenString += "/";
+                boardString += "/";
                 file = 0;
                 rank--;
             }
@@ -88,11 +126,11 @@ public class Position {
             }
             else {
                 if (space > 0) {
-                    fenString += space.ToString();
+                    boardString += space.ToString();
                     space = 0;
                 }
 
-                fenString += Piece.Color(Board[rank * 8 + file]) == Color.White
+                boardString += Piece.Color(Board[rank * 8 + file]) == Color.White
                     ? char.ToUpper(piece)
                     : char.ToLower(piece);
             }
@@ -100,6 +138,14 @@ public class Position {
             file++;
         }
 
-        return fenString;
+        var enPassant = "-";
+        if (EnPassantTarget > -1) {
+            file = EnPassantTarget % 8;
+            rank = EnPassantTarget / 8;
+            
+            enPassant = ((char)(file + 97)).ToString() + rank;
+        }
+
+        return $"{boardString} {(ColorToMove == Color.White ? "w" : "b")} {CastlingAvailability} {enPassant} {HalfmoveClock} {MoveCounter}";
     }
 }
