@@ -4,17 +4,64 @@
              xmlns:local="clr-namespace:ClientGUI"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         <BitmapImage x:Key="BlackBishop" UriSource="Images/black-bishop.png"/>
-         <BitmapImage x:Key="BlackKing" UriSource="Images/black-king.png"/>
-         <BitmapImage x:Key="BlackKnight" UriSource="Images/black-knight.png"/>
-         <BitmapImage x:Key="BlackPawn" UriSource="Images/black-pawn.png"/>
-         <BitmapImage x:Key="BlackQueen" UriSource="Images/black-queen.png"/>
-         <BitmapImage x:Key="BlackRook" UriSource="Images/black-rook.png"/>
-         <BitmapImage x:Key="WhiteBishop" UriSource="Images/white-bishop.png"/>
-         <BitmapImage x:Key="WhiteKing" UriSource="Images/white-king.png"/>
-         <BitmapImage x:Key="WhiteKnight" UriSource="Images/white-knight.png"/>
-         <BitmapImage x:Key="WhitePawn" UriSource="Images/white-pawn.png"/>
-         <BitmapImage x:Key="WhiteQueen" UriSource="Images/white-queen.png"/>
-         <BitmapImage x:Key="WhiteRook" UriSource="Images/white-rook.png"/>
+        <!-- Custom Title Bar -->
+        <Style x:Key="WindowStyle" TargetType="Window">
+            <Setter Property="WindowChrome.WindowChrome">
+                <Setter.Value>
+                    <WindowChrome CaptionHeight="32" IsHitTestVisibleInChrome="True" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Window">
+                        <DockPanel LastChildFill="True">
+                            <Border Background="#333333" DockPanel.Dock="Top" Height="32">
+                                <DockPanel LastChildFill="False" WindowChrome.IsHitTestVisibleInChrome="True">
+                                    <TextBlock DockPanel.Dock="Left" Text="{TemplateBinding Title}" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="WhiteSmoke" />
+                                    
+                                    <Button DockPanel.Dock="Right" Height="32" Width="32" Click="CloseWindowClick"> X </Button>
+                                    <Button DockPanel.Dock="Right" Height="32" Width="32" Click="CloseWindowClick"> o </Button>
+                                    <Button DockPanel.Dock="Right" Height="32" Width="32" Click="CloseWindowClick"> - </Button>
+                                </DockPanel>
+                            </Border>
+                            <Border Background="#333333" BorderBrush="LightGray" BorderThickness="1,0,1,1">
+                                <ContentPresenter />
+                            </Border>
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Piece images -->
+        <BitmapImage x:Key="BlackBishop" UriSource="Images/black-bishop.png"/>
+        <BitmapImage x:Key="BlackKing" UriSource="Images/black-king.png"/>
+        <BitmapImage x:Key="BlackKnight" UriSource="Images/black-knight.png"/>
+        <BitmapImage x:Key="BlackPawn" UriSource="Images/black-pawn.png"/>
+        <BitmapImage x:Key="BlackQueen" UriSource="Images/black-queen.png"/>
+        <BitmapImage x:Key="BlackRook" UriSource="Images/black-rook.png"/>
+        <BitmapImage x:Key="WhiteBishop" UriSource="Images/white-bishop.png"/>
+        <BitmapImage x:Key="WhiteKing" UriSource="Images/white-king.png"/>
+        <BitmapImage x:Key="WhiteKnight" UriSource="Images/white-knight.png"/>
+        <BitmapImage x:Key="WhitePawn" UriSource="Images/white-pawn.png"/>
+        <BitmapImage x:Key="WhiteQueen" UriSource="Images/white-queen.png"/>
+        <BitmapImage x:Key="WhiteRook" UriSource="Images/white-rook.png"/>
+         
+         <!-- Remove MouseOver effect on board -->
+         <Style x:Key="BoardSquare" TargetType="Button">
+             <Setter Property="OverridesDefaultStyle" Value="True"/>
+             <Setter Property="Template">
+                 <Setter.Value>
+                     <ControlTemplate TargetType="Button">
+                         <Border BorderThickness="0" Padding="0" Background="{TemplateBinding Background}">
+                             <Grid>
+                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                             </Grid>
+                         </Border>
+                     </ControlTemplate>
+                 </Setter.Value>
+             </Setter>
+         </Style>
+        
     </Application.Resources>
 </Application>

@@ -10,5 +10,9 @@ namespace ClientGUI {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application { }
+    public partial class App : Application {
+        private void CloseWindowClick(object sender, RoutedEventArgs e) {
+            this.MainWindow?.Close();
+        }
+    }
 }

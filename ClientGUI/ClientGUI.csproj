@@ -5,6 +5,7 @@
         <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
+        <ApplicationIcon>Images\AppIcon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -72,6 +73,13 @@
       <Resource Include="Images\white-rook.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Resource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Images\AppIcon.ico" />
+      <EmbeddedResource Include="Images\AppIcon.ico">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
