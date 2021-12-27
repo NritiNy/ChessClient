@@ -1,10 +1,10 @@
-﻿using ChessEngine;
+﻿using ChessEngine.BoardRepresentation;
 
 namespace PerformanceTest;
 
-public class PerformanceTest
+public static class PerformanceTest
 {
-    public static List<Position> Positions => new List<Position>
+    private static Position[] Positions => new []
     {
         new Position("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
         new Position("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"),
@@ -15,7 +15,7 @@ public class PerformanceTest
         new Position("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 1")
     };
 
-    public static List<List<ulong>> Results => new List<List<ulong>>
+    private static List<ulong>[] Results => new []
     {
         new List<ulong> {20, 400, 8902, 197281, 4865609, 119060324, 3195901860, 84998978956, 2439530234167},
         new List<ulong> {48, 2039, 97862, 4085603, 193690690, 8031647685},
@@ -26,27 +26,25 @@ public class PerformanceTest
         new List<ulong> {46, 2079, 89890, 3894594, 164075551, 6923051137, 287188994746, 11923589843526, 490154852788714}
     };
 
-    public static void Run(int position, int depth) {
-        if (position < 1 || position >= Positions.Count)
+    private static void Run(int position, int depth) {
+        if (position < 1 || position >= Positions.Length)
             throw new ArgumentException("The position index has to be valid.");
 
-        if (depth < 1 || depth >= Results[position].Count)
+        if (depth < 1 || depth >= Results[position - 1].Count)
             throw new ArgumentException("The depth has to be within the calculated depths.");
         
         ulong Perft(Position pos, int d) {
-            List<Move> moves;
-            int n_moves, i = 0;
             ulong nodes = 0;
 
-            n_moves = pos.GenerateLegalMoves(out moves);
+            var nMoves = pos.GenerateLegalMoves(out var moves);
 
-            if (depth == 1)
-                return (ulong) n_moves;
+            if (d == 1)
+                return (ulong) nMoves;
 
-            for (int j = 0; j < n_moves; j++) {
+            for (var i = 0; i < nMoves; i++) {
                 pos.MakeMove(moves[i]);
-                nodes += Perft(pos, depth - 1);
-                pos.UnmakeMove();
+                nodes += Perft(pos, d - 1);
+                pos.UnmakeMove(moves[i]);
             }
 
             return nodes;
@@ -68,7 +66,7 @@ public class PerformanceTest
         Console.WriteLine(Positions[0].FenString());
         PrintBoard(Positions[0]);
         Console.WriteLine("\n");
-        Run(1, 1);
+        Run(1, 3);
     }
     
     public static void PrintBoard(Position position, int colorToPlay = Color.White)

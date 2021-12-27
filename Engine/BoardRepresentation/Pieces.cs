@@ -1,4 +1,4 @@
-﻿namespace ChessEngine;
+﻿namespace ChessEngine.BoardRepresentation;
 
 public static class Piece
 {

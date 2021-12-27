@@ -1,7 +1,6 @@
-﻿namespace ChessEngine; 
+﻿namespace ChessEngine;
 
 public static class PrecomputedMoveData {
-
     public static readonly sbyte[] DirectionOffsets = {8, -8, -1, 1, 7, -7, 9, -9};
 
     public static readonly byte[][] NSquaresToEdge;
@@ -12,6 +11,10 @@ public static class PrecomputedMoveData {
     public static readonly byte[][] RookMoves;
     public static readonly byte[][] QueenMoves;
 
+    public static readonly byte[][] PawnAttackDirections = {
+        new byte[] {4, 6},
+        new byte[] {7, 5}
+    };
 
     static PrecomputedMoveData() {
         NSquaresToEdge = new byte[64][];
@@ -22,7 +25,7 @@ public static class PrecomputedMoveData {
         RookMoves = new byte[64][];
         QueenMoves = new byte[64][];
 
-        sbyte[] knightJumpDeltas = { 15, 17, -17, -15, 10, -6, 6, -10 };
+        sbyte[] knightJumpDeltas = {15, 17, -17, -15, 10, -6, 6, -10};
 
         for (sbyte idx = 0; idx < 64; idx++) {
             var rank = idx / 8;
@@ -31,23 +34,23 @@ public static class PrecomputedMoveData {
             var up = 7 - rank;
             var down = rank;
             var left = file;
-            var rigth = 7 - file;
+            var right = 7 - file;
 
             NSquaresToEdge[idx] = new byte[8];
             NSquaresToEdge[idx][0] = Convert.ToByte(up);
             NSquaresToEdge[idx][1] = Convert.ToByte(down);
             NSquaresToEdge[idx][2] = Convert.ToByte(left);
-            NSquaresToEdge[idx][3] = Convert.ToByte(rigth);
+            NSquaresToEdge[idx][3] = Convert.ToByte(right);
             NSquaresToEdge[idx][4] = Convert.ToByte(Math.Min(up, left));
-            NSquaresToEdge[idx][5] = Convert.ToByte(Math.Min(down, rigth));
-            NSquaresToEdge[idx][6] = Convert.ToByte(Math.Min(up, rigth));
+            NSquaresToEdge[idx][5] = Convert.ToByte(Math.Min(down, right));
+            NSquaresToEdge[idx][6] = Convert.ToByte(Math.Min(up, right));
             NSquaresToEdge[idx][7] = Convert.ToByte(Math.Min(down, left));
 
             var legalKnightJumps = new List<byte>();
             foreach (int kjDelta in knightJumpDeltas) {
                 var targetSquare = idx + kjDelta;
                 if (targetSquare is < 0 or >= 64) continue;
-                
+
                 var kRank = targetSquare / 8;
                 var kFile = targetSquare - kRank * 8;
 
@@ -61,10 +64,10 @@ public static class PrecomputedMoveData {
             foreach (var kmDelta in DirectionOffsets) {
                 var targetSquare = idx + kmDelta;
                 if (targetSquare is < 0 or >= 64) continue;
-                
+
                 var kRank = targetSquare / 8;
                 var kFile = targetSquare - kRank * 8;
-                
+
                 if (Math.Max(Math.Abs(rank - kRank), Math.Abs(file - kFile)) == 1) {
                     legalKingMoves.Add((byte) targetSquare);
                 }
@@ -91,8 +94,7 @@ public static class PrecomputedMoveData {
             }
             BishopMoves[idx] = legalBishopMoves.ToArray();
 
-            QueenMoves[idx] = ((List<byte>) legalRookMoves.Concat(legalBishopMoves)).ToArray();
+            QueenMoves[idx] = legalRookMoves.Concat(legalBishopMoves).ToArray();
         }
     }
-
 }

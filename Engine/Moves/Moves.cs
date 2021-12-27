@@ -10,6 +10,7 @@ public readonly  struct Move {
         public const int PromoteToKnight = 4;
         public const int PromoteToBishop = 5;
         public const int PawnTwoForward = 6;
+        public const int EnPassantCapture = 7;
     }
 
     private readonly ushort _moveValue;
