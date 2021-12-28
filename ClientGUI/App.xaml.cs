@@ -1,18 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace ClientGUI {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application {
-        private void CloseWindowClick(object sender, RoutedEventArgs e) {
+        private void CloseWindowClicked(object sender, RoutedEventArgs e) {
             this.MainWindow?.Close();
+        }
+
+        private void MaximiseWindowClicked(object sender, RoutedEventArgs e) {
+            if (MainWindow is not null) {
+                MainWindow.WindowState = MainWindow.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+                
+                //TODO: adapt icon to match window state
+            }
+        }
+
+        private void MinimiseWindowClicked(object sender, RoutedEventArgs e) {
+            if (MainWindow is not null) MainWindow.WindowState = WindowState.Minimized;
         }
     }
 }

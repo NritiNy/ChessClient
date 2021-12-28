@@ -6,7 +6,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using ChessEngine;
-using ChessColor = ChessEngine.Color;
+using ChessEngine.BoardRepresentation;
+using ChessColor = ChessEngine.BoardRepresentation.Color;
 
 
 namespace ClientGUI {
@@ -17,7 +18,7 @@ namespace ClientGUI {
         private int _orientation = ChessColor.White;
 
         // match statistics
-        private Match _currentMatch = new Match(); 
+        public Match CurrentMatch { get; private set; }= new Match(); 
         
         // game statistics
         private List<Move> _possibleMoves = new();
@@ -27,8 +28,9 @@ namespace ClientGUI {
         
         public MainWindow() {
             InitializeComponent();
-            
+
             DrawBoard();
+            _ = CurrentMatch.CurrentGame.GenerateLegalMoves(out _possibleMoves);
         }
 
 
@@ -54,8 +56,8 @@ namespace ClientGUI {
                     b.Background = color;
 
                     var pos = _orientation == ChessColor.White ? rank * 8 + file : (7 - rank) * 8 + 7 - file;
-                    var piece = Piece.PieceType(_currentMatch.CurrentGame.Board[pos]);
-                    var pieceColor = Piece.Color(_currentMatch.CurrentGame.Board[pos]);
+                    var piece = Piece.PieceType(CurrentMatch.CurrentGame.Board[pos]);
+                    var pieceColor = Piece.Color(CurrentMatch.CurrentGame.Board[pos]);
 
                     if (piece > Piece.None) {
                         var resourceKey = pieceColor == ChessColor.White ? "White" : "Black";
@@ -112,12 +114,17 @@ namespace ClientGUI {
         
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e) => AdjustBoardSize();
 
-        private void SidebarExpanded(object sender, RoutedEventArgs e)  => AdjustBoardSize();
+        private void SidebarExpanded(object sender, RoutedEventArgs e) {
+            try {
+                AdjustBoardSize();
+            }
+            catch { }
+        }
 
 
         private void SquareClicked(object sender, RoutedEventArgs e) {
             if (sender is not Button b) return;
-            if (!_currentMatch.InMatch) return;
+            //if (!_currentMatch.InMatch) return;
             
             int rank, file;
             if (_orientation == ChessColor.White) {
@@ -128,9 +135,9 @@ namespace ClientGUI {
                 rank = Grid.GetRow(b) - 1;
                 file = 7 - (Grid.GetColumn(b) - 1);
             }
-            
-            if (_startSquare < 0) {
-                if (!Piece.IsColor(_currentMatch.CurrentGame.Board[rank * 8 + file], _currentMatch.CurrentGame.ColorToMove) || _currentMatch.CurrentGame.Board[rank * 8 + file] == Piece.None) {
+
+            void HandleStartSquareClicked() {
+                if (!Piece.IsColor(CurrentMatch.CurrentGame.Board[rank * 8 + file], CurrentMatch.CurrentGame.ColorToMove) || CurrentMatch.CurrentGame.Board[rank * 8 + file] == Piece.None) {
                     _startSquare = -1;
                     _targetSquare = -1;
                     
@@ -140,28 +147,29 @@ namespace ClientGUI {
                 
                 _startSquare = rank * 8 + file;
                 foreach (var move in _possibleMoves) {
-                    if (move.Start == _startSquare) _validMoves[move.Target] = true;
+                    if (move.Start == _startSquare) 
+                        _validMoves[move.Target] = true;
                 }
-                
+
                 DrawBoard();
-            } else if (_targetSquare < 0 && rank * 8 + file != _startSquare) {
+            }
+
+            void HandleTargetSquareClicked() {
                 _validMoves = new bool[64];
                 
-                if (Piece.IsColor(_currentMatch.CurrentGame.Board[rank * 8 + file], _currentMatch.CurrentGame.ColorToMove)) {
-                    _startSquare = -1;
-                    _targetSquare = -1;
+                if (Piece.IsColor(CurrentMatch.CurrentGame.Board[rank * 8 + file], CurrentMatch.CurrentGame.ColorToMove)) {
+                    HandleStartSquareClicked();
                     
-                    DrawBoard();
                     return;
                 }
                 
                 _targetSquare = rank * 8 + file;
                 var move = new Move(_startSquare, _targetSquare);
 
-                if (_currentMatch.CurrentGame.IsLegalMove(move)) {
-                    _currentMatch.CurrentGame.MakeMove(move);
+                if (CurrentMatch.CurrentGame.IsLegalMove(move)) {
+                    CurrentMatch.CurrentGame.MakeMove(move);
 
-                    _ = _currentMatch.CurrentGame.GenerateLegalMoves(out _possibleMoves);
+                    _ = CurrentMatch.CurrentGame.GenerateLegalMoves(out _possibleMoves);
                 }
 
                 DrawBoard();
@@ -169,8 +177,20 @@ namespace ClientGUI {
                 _startSquare = -1;
                 _targetSquare = -1;
             }
+            
+            if (_startSquare < 0) {
+                HandleStartSquareClicked();
+            } else if (_targetSquare < 0 && rank * 8 + file != _startSquare) {
+                HandleTargetSquareClicked();
+            }
         }
         
         #endregion
+
+        private void OpenSettings(object sender, RoutedEventArgs e) {
+            var settings = new SettingsWindow();
+            var result = settings.ShowDialog();
+            if (result.HasValue  && result.Value) settings.ApplySettings(); 
+        }
     }
 }

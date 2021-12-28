@@ -1,4 +1,5 @@
-﻿using ChessEngine;
+﻿using System.Globalization;
+using ChessEngine.BoardRepresentation;
 
 namespace ClientGUI; 
 
@@ -13,11 +14,13 @@ public class Match {
     public PlayerType Player1Type { get; }
     public string Player1Name { get; }
     public double Player1Score { get; private set; } = 0.0;
+    public string Player1ScoreString => Player1Score.ToString("N1", CultureInfo.InvariantCulture);
     public int CurrentPlayer1Color { get; private set; } = Color.White;
     
     public PlayerType Player2Type { get; }
     public string Player2Name { get; }
     public double Player2Score { get; private set; } = 0.0;
+    public string Player2ScoreString => Player2Score.ToString("N1", CultureInfo.InvariantCulture);
     public int CurrentPlayer2Color { get; private set; } = Color.Black;
 
 

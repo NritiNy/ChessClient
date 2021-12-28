@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientGUI"
         mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="ChessAI Client" MinHeight="450" MinWidth="850" ResizeMode="CanResize" 
         WindowStyle="None" SizeChanged="MainWindow_OnSizeChanged" Style="{StaticResource WindowStyle}">
     <Grid Background="#333333" Margin="0">
@@ -17,13 +18,14 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <Expander x:Name="SideBar" Grid.Column="0" Background="LightGray" HorizontalAlignment="Right" ExpandDirection="Left" Expanded="SidebarExpanded">
+        <Expander x:Name="SideBarExpander" Grid.Column="0" Background="LightGray" HorizontalAlignment="Right" 
+                  ExpandDirection="Left" Expanded="SidebarExpanded" IsExpanded="True">
             <DockPanel Width="{Binding ActualWidth, ElementName=GameInformationSidebar}" LastChildFill="False">
-                    <Button DockPanel.Dock="Bottom" Height="50" Style="{StaticResource BoardSquare}"> Quit </Button>
-                    <Button DockPanel.Dock="Bottom" Height="50" Style="{StaticResource BoardSquare}"> Settings </Button>
+                    <Button DockPanel.Dock="Bottom" Height="50" Style="{StaticResource MenuButton}"> Quit </Button>
+                    <Button DockPanel.Dock="Bottom" Height="50" Style="{StaticResource MenuButton}" Click="OpenSettings"> Settings </Button>
                 
-                    <Button DockPanel.Dock="Top" Height="50" Style="{StaticResource BoardSquare}"> New Game </Button>
-                    <Button DockPanel.Dock="Top" Height="50" Style="{StaticResource BoardSquare}" IsEnabled="False"> Watch </Button>
+                    <Button DockPanel.Dock="Top" Height="50" Style="{StaticResource MenuButton}"> New Game </Button>
+                    <Button DockPanel.Dock="Top" Height="50" Style="{StaticResource MenuButton}" IsEnabled="False"> Watch </Button>
                 </DockPanel>
         </Expander>
         
@@ -65,41 +67,41 @@
                     <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
                 
-                <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="0" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="0" Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="0" Grid.Column="7" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="0" Grid.Column="8" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="0" Grid.Column="3" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="0" Grid.Column="4" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="0" Grid.Column="5" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="0" Grid.Column="6" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="0" Grid.Column="7" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="0" Grid.Column="8" Style="{StaticResource BoardLegend}"/>
                 
-                <TextBlock Grid.Row="9" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="9" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="9" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="9" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="9" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="9" Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="9" Grid.Column="7" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="9" Grid.Column="8" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+                <TextBlock Grid.Row="9" Grid.Column="1" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="9" Grid.Column="2" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="9" Grid.Column="3" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="9" Grid.Column="4" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="9" Grid.Column="5" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="9" Grid.Column="6" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="9" Grid.Column="7" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="9" Grid.Column="8" Style="{StaticResource BoardLegend}"/>
                 
-                <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="5" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="6" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="7" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="8" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource BoardLegend}"/>
                 
-                <TextBlock Grid.Row="1" Grid.Column="9" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="2" Grid.Column="9" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="3" Grid.Column="9" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="4" Grid.Column="9" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="5" Grid.Column="9" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="6" Grid.Column="9" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="7" Grid.Column="9" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                <TextBlock Grid.Row="8" Grid.Column="9" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+                <TextBlock Grid.Row="1" Grid.Column="9" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="2" Grid.Column="9" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="3" Grid.Column="9" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="4" Grid.Column="9" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="5" Grid.Column="9" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="6" Grid.Column="9" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="7" Grid.Column="9" Style="{StaticResource BoardLegend}"/>
+                <TextBlock Grid.Row="8" Grid.Column="9" Style="{StaticResource BoardLegend}"/>
                 
                 
                 <Button Grid.Column="1" Grid.Row="1" BorderThickness="0" Click="SquareClicked" Style="{StaticResource BoardSquare}"/>
@@ -174,13 +176,15 @@
                 <Button Grid.Column="7" Grid.Row="8" BorderThickness="0" Click="SquareClicked" Style="{StaticResource BoardSquare}"/>
                 <Button Grid.Column="8" Grid.Row="8" BorderThickness="0" Click="SquareClicked" Style="{StaticResource BoardSquare}"/>
                 
-                <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="8" Grid.RowSpan="8" BorderBrush="Gray" BorderThickness="1"/>
+                <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="8" Grid.RowSpan="8" BorderBrush="{StaticResource BoardBorderBrush}" BorderThickness="1"/>
             </Grid>
         </Grid>
         
-        <Border x:Name="GameInformationSidebar" Grid.Column="2" Padding="0" BorderThickness="0" BorderBrush="Gray">
+        <Border x:Name="GameInformationSidebar" Grid.Column="2" Padding="0" BorderThickness="0">
             <DockPanel LastChildFill="True">
-                <Border DockPanel.Dock="Top" Width="{Binding Width, ElementName=GameInformationSidebar}" Height="80" Margin="0,10,10,5" CornerRadius="5" BorderBrush="Gray" BorderThickness="1">
+                <Border DockPanel.Dock="Top" Width="{Binding Width, ElementName=GameInformationSidebar}" 
+                        Height="80" Margin="0,10,10,5" CornerRadius="5" 
+                        BorderBrush="{StaticResource DefaultBorderBrush}" BorderThickness="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50"/>
@@ -193,17 +197,25 @@
                             <RowDefinition Height="30" />
                         </Grid.RowDefinitions>
                         
-                        <Border x:Name="Player2WinCountContainer" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="3">
-                            <TextBlock x:Name="Player2WinCount" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"> 0.0 </TextBlock>
+                        <Border x:Name="Player2WinCountContainer" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" 
+                                BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="3">
+                            <TextBlock x:Name="Player2WinCount" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                       Style="{StaticResource BaseTextBlock}" Foreground="Black"
+                                       Text="{Binding Path=CurrentMatch.Player2ScoreString, Mode=OneWay}" />
                         </Border>
-                        <TextBlock x:Name="Player2Name" Grid.Column="2" Grid.Row="0" VerticalAlignment="Top" FontSize="15"> Player2 </TextBlock>
-                        <DockPanel Grid.Column="2" Grid.Row="1" Width="{Binding ActualWidth, ElementName=Player2Name}" HorizontalAlignment="Left" VerticalAlignment="Center" LastChildFill="True">
-                            <TextBlock x:Name="Player2CapturesValue" DockPanel.Dock="Right" Padding="0,0,5,0" Width="25" HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right" Text=""/>
+                        <TextBlock x:Name="Player2Name" Grid.Column="2" Grid.Row="0" VerticalAlignment="Top" 
+                                   Style="{StaticResource BaseTextBlock}" 
+                                   Text="{Binding Path=CurrentMatch.Player2Name, Mode=OneWay}" />
+                        <DockPanel Grid.Column="2" Grid.Row="1" Width="{Binding ActualWidth, ElementName=Player2Name}" 
+                                   HorizontalAlignment="Left" VerticalAlignment="Center" LastChildFill="True">
+                            <TextBlock x:Name="Player2CapturesValue" DockPanel.Dock="Right" Padding="0,0,5,0" Width="25" 
+                                       HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right" Text=""/>
                             <Border DockPanel.Dock="Left" BorderThickness="0">
                                 <Canvas x:Name="Player2Captures" Height="15" ClipToBounds="True" />
                             </Border>
                         </DockPanel>
-                        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" BorderBrush="Black">
+                        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" 
+                                BorderBrush="{StaticResource DefaultBorderBrush}">
                             <Grid ClipToBounds="True">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -211,16 +223,24 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 
-                                <TextBlock Grid.Column="0" x:Name="Player2MatchTimer" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" ToolTip="Match timer"> 0:00 </TextBlock>
-                                <TextBlock Grid.Column="1" x:Name="Player2MoveTimer" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" ToolTip="Move timer"> 0:00 </TextBlock>
-                                <TextBlock Grid.Column="2" x:Name="Player2TimeIncrement" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" ToolTip="Time increment"> +30s </TextBlock>
+                                <TextBlock Grid.Column="0" x:Name="Player2MatchTimer" HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
+                                           ToolTip="Match timer"> 0:00 </TextBlock>
+                                <TextBlock Grid.Column="1" x:Name="Player2MoveTimer" HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
+                                           ToolTip="Move timer"> 0:00 </TextBlock>
+                                <TextBlock Grid.Column="2" x:Name="Player2TimeIncrement" HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
+                                           ToolTip="Time increment"> +30s </TextBlock>
                             </Grid>
                             
                         </Border>
                     </Grid>
                 </Border>
                 
-                <Border DockPanel.Dock="Bottom" Width="{Binding Width, ElementName=GameInformationSidebar}" Height="80" Margin="0,5,10,10" CornerRadius="5" BorderBrush="Gray" BorderThickness="1">
+                <Border DockPanel.Dock="Bottom" Width="{Binding Width, ElementName=GameInformationSidebar}" 
+                        Height="80" Margin="0,5,10,10" CornerRadius="5" 
+                        BorderBrush="{StaticResource DefaultBorderBrush}" BorderThickness="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50"/>
@@ -233,17 +253,25 @@
                             <RowDefinition Height="30" />
                         </Grid.RowDefinitions>
                         
-                        <Border x:Name="Player1WinCountContainer" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="3">
-                            <TextBlock x:Name="Player1WinCount" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"> 0.0 </TextBlock>
+                        <Border x:Name="Player1WinCountContainer" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" 
+                                BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="3">
+                            <TextBlock x:Name="Player1WinCount" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                       Style="{StaticResource BaseTextBlock}" Foreground="Black"
+                                       Text="{Binding Path=CurrentMatch.Player1ScoreString, Mode=OneWay}" />
                         </Border>
-                        <TextBlock x:Name="Player1Name" Grid.Column="2" Grid.Row="0" VerticalAlignment="Top" FontSize="15"> Player1 </TextBlock>
-                        <DockPanel Grid.Column="2" Grid.Row="1" Width="{Binding ActualWidth, ElementName=Player1Name}" HorizontalAlignment="Left" VerticalAlignment="Center" LastChildFill="True">
-                            <TextBlock x:Name="Player1CapturesValue" DockPanel.Dock="Right" Padding="0,0,5,0" Width="25" HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right" Text=""/>
+                        <TextBlock x:Name="Player1Name" Grid.Column="2" Grid.Row="0" VerticalAlignment="Top" 
+                                   Style="{StaticResource BaseTextBlock}"
+                                   Text="{Binding Path=CurrentMatch.Player1Name, Mode=OneWay}" />
+                        <DockPanel Grid.Column="2" Grid.Row="1" Width="{Binding ActualWidth, ElementName=Player1Name}" 
+                                   HorizontalAlignment="Left" VerticalAlignment="Center" LastChildFill="True">
+                            <TextBlock x:Name="Player1CapturesValue" DockPanel.Dock="Right" Padding="0,0,5,0" Width="25" 
+                                       HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right" Text=""/>
                             <Border DockPanel.Dock="Left" BorderThickness="0">
                                 <Canvas x:Name="Player1Captures" Height="15" ClipToBounds="True" />
                             </Border>
                         </DockPanel>
-                        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" BorderBrush="Black">
+                        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" 
+                                BorderBrush="{StaticResource DefaultBorderBrush}">
                             <Grid ClipToBounds="True">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -251,16 +279,24 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 
-                                <TextBlock Grid.Column="0" x:Name="Player1MatchTimer" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" ToolTip="Match timer"> 0:00 </TextBlock>
-                                <TextBlock Grid.Column="1" x:Name="Player1MoveTimer" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" ToolTip="Move timer"> 0:00 </TextBlock>
-                                <TextBlock Grid.Column="2" x:Name="Player1TimeIncrement" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" ToolTip="Time increment"> +30s </TextBlock>
+                                <TextBlock Grid.Column="0" x:Name="Player1MatchTimer" HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
+                                           ToolTip="Match timer"> 0:00 </TextBlock>
+                                <TextBlock Grid.Column="1" x:Name="Player1MoveTimer" HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
+                                           ToolTip="Move timer"> 0:00 </TextBlock>
+                                <TextBlock Grid.Column="2" x:Name="Player1TimeIncrement" HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
+                                           ToolTip="Time increment"> +30s </TextBlock>
                             </Grid>
                             
                         </Border>
                     </Grid>
                 </Border>
                 
-                <Border DockPanel.Dock="Top" Width="{Binding Width, ElementName=GameInformationSidebar}" Margin="0,5,10,5" CornerRadius="5" BorderBrush="Gray" BorderThickness="1" Padding="5">
+                <Border DockPanel.Dock="Top" Width="{Binding Width, ElementName=GameInformationSidebar}" 
+                        Margin="0,5,10,5" CornerRadius="5" BorderBrush="{StaticResource DefaultBorderBrush}" 
+                        BorderThickness="1" Padding="5">
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                         <TextBlock TextWrapping="NoWrap" FontSize="15">
                         </TextBlock>
