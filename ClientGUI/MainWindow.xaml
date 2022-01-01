@@ -24,7 +24,7 @@
                     <Button DockPanel.Dock="Bottom" Height="50" Style="{StaticResource MenuButton}"> Quit </Button>
                     <Button DockPanel.Dock="Bottom" Height="50" Style="{StaticResource MenuButton}" Click="OpenSettings"> Settings </Button>
                 
-                    <Button DockPanel.Dock="Top" Height="50" Style="{StaticResource MenuButton}"> New Game </Button>
+                    <Button DockPanel.Dock="Top" Height="50" Style="{StaticResource MenuButton}"> Play </Button>
                     <Button DockPanel.Dock="Top" Height="50" Style="{StaticResource MenuButton}" IsEnabled="False"> Watch </Button>
                 </DockPanel>
         </Expander>
@@ -181,128 +181,169 @@
         </Grid>
         
         <Border x:Name="GameInformationSidebar" Grid.Column="2" Padding="0" BorderThickness="0">
-            <DockPanel LastChildFill="True">
-                <Border DockPanel.Dock="Top" Width="{Binding Width, ElementName=GameInformationSidebar}" 
-                        Height="80" Margin="0,10,10,5" CornerRadius="5" 
-                        BorderBrush="{StaticResource DefaultBorderBrush}" BorderThickness="1">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition Width="5"/>
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="3*" />
-                            <RowDefinition Height="2*" />
-                            <RowDefinition Height="30" />
-                        </Grid.RowDefinitions>
-                        
-                        <Border x:Name="Player2WinCountContainer" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" 
-                                BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="3">
-                            <TextBlock x:Name="Player2WinCount" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                       Style="{StaticResource BaseTextBlock}" Foreground="Black"
-                                       Text="{Binding Path=CurrentMatch.Player2ScoreString, Mode=OneWay}" />
-                        </Border>
-                        <TextBlock x:Name="Player2Name" Grid.Column="2" Grid.Row="0" VerticalAlignment="Top" 
-                                   Style="{StaticResource BaseTextBlock}" 
-                                   Text="{Binding Path=CurrentMatch.Player2Name, Mode=OneWay}" />
-                        <DockPanel Grid.Column="2" Grid.Row="1" Width="{Binding ActualWidth, ElementName=Player2Name}" 
-                                   HorizontalAlignment="Left" VerticalAlignment="Center" LastChildFill="True">
-                            <TextBlock x:Name="Player2CapturesValue" DockPanel.Dock="Right" Padding="0,0,5,0" Width="25" 
-                                       HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right" Text=""/>
-                            <Border DockPanel.Dock="Left" BorderThickness="0">
-                                <Canvas x:Name="Player2Captures" Height="15" ClipToBounds="True" />
-                            </Border>
-                        </DockPanel>
-                        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" 
-                                BorderBrush="{StaticResource DefaultBorderBrush}">
-                            <Grid ClipToBounds="True">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                
-                                <TextBlock Grid.Column="0" x:Name="Player2MatchTimer" HorizontalAlignment="Center" 
-                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
-                                           ToolTip="Match timer"> 0:00 </TextBlock>
-                                <TextBlock Grid.Column="1" x:Name="Player2MoveTimer" HorizontalAlignment="Center" 
-                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
-                                           ToolTip="Move timer"> 0:00 </TextBlock>
-                                <TextBlock Grid.Column="2" x:Name="Player2TimeIncrement" HorizontalAlignment="Center" 
-                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
-                                           ToolTip="Time increment"> +30s </TextBlock>
-                            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MaxWidth="20"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                
+                <Border Grid.Column="0" BorderBrush="Red" BorderThickness="1">
+                    <Button> Test </Button>
+                </Border>
+                <Border Grid.Column="1" Padding="10, 5">
+                    <DockPanel LastChildFill="True">
+                    <Border DockPanel.Dock="Top" Width="{Binding Width, ElementName=GameInformationSidebar}" 
+                            Height="80" Margin="0,5" CornerRadius="5" 
+                            BorderBrush="{StaticResource DefaultBorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*" />
+                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="30" />
+                            </Grid.RowDefinitions>
                             
-                        </Border>
-                    </Grid>
+                            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="{StaticResource DefaultBorderBrush}" 
+                                    Margin="5" BorderThickness="1" CornerRadius="3">
+                                <Viewbox>
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                               Style="{StaticResource BaseTextBlock}" Padding="5, 0"
+                                               Text="{Binding Path=CurrentMatch.Player2ScoreString, Mode=OneWay}" />
+                                </Viewbox>
+                            </Border>
+                            <Viewbox Grid.Column="2" Grid.Row="0" Stretch="Uniform">
+                                <TextBlock VerticalAlignment="Top" Style="{StaticResource BaseTextBlock}"
+                                           Padding="0,0,5,0"
+                                           Text="{Binding Path=CurrentMatch.Player2Name, Mode=OneWay}" />
+                            </Viewbox>
+                            <DockPanel Grid.Column="2" Grid.Row="1" Width="{Binding ActualWidth, ElementName=Player1Name}" 
+                                       HorizontalAlignment="Left" VerticalAlignment="Center" LastChildFill="True">
+                                <Viewbox>
+                                    <TextBlock DockPanel.Dock="Right" Padding="0,0,5,0" Width="25" 
+                                               HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right" 
+                                               Style="{StaticResource BaseTextBlock}"
+                                               Text="{Binding CurrentMatch.Player2CaptureDifferenceString, Mode=OneWay}"/>
+                                </Viewbox>
+                                <Border DockPanel.Dock="Left" BorderThickness="0">
+                                    <Canvas x:Name="Player2Captures" Height="15" ClipToBounds="True" />
+                                </Border>
+                            </DockPanel>
+                            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" 
+                                    BorderBrush="{StaticResource DefaultBorderBrush}">
+                                <Grid ClipToBounds="True">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <Viewbox Grid.Column="0">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5,0"
+                                                   Style="{StaticResource BaseTextBlock}" ToolTip="Match timer"
+                                                   Text="{Binding CurrentMatch.Player2GameTimerValueString}" />
+                                    </Viewbox>
+                                    <Viewbox Grid.Column="1">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5,0"
+                                                   Style="{StaticResource BaseTextBlock}" ToolTip="Move timer"
+                                                   Text="{Binding CurrentMatch.Player2MoveTimerValueString}" /> 
+                                    </Viewbox>
+                                    <Viewbox Grid.Column="2">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5,0"
+                                                   Style="{StaticResource BaseTextBlock}" ToolTip="Time increment" 
+                                                   Text="{Binding CurrentMatch.TimeIncrementString}"/>
+                                    </Viewbox>
+                                </Grid>
+                                
+                            </Border>
+                        </Grid>
+                    </Border>
+                    
+                    <Border DockPanel.Dock="Bottom" Width="{Binding Width, ElementName=GameInformationSidebar}" 
+                            Height="80" Margin="0,5" CornerRadius="5" 
+                            BorderBrush="{StaticResource DefaultBorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*" />
+                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="30" />
+                            </Grid.RowDefinitions>
+                            
+                            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="{StaticResource DefaultBorderBrush}" 
+                                    Margin="5" BorderThickness="1" CornerRadius="3">
+                                <Viewbox>
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                               Style="{StaticResource BaseTextBlock}" Padding="5, 0"
+                                               Text="{Binding Path=CurrentMatch.Player1ScoreString, Mode=OneWay}" />
+                                </Viewbox>
+                            </Border>
+                            <Viewbox Grid.Column="2" Grid.Row="0" Stretch="Uniform">
+                                <TextBlock VerticalAlignment="Top" Style="{StaticResource BaseTextBlock}"
+                                           Padding="0,0,5,0"
+                                           Text="{Binding Path=CurrentMatch.Player1Name, Mode=OneWay}" />
+                            </Viewbox>
+                            <DockPanel Grid.Column="2" Grid.Row="1" Width="{Binding ActualWidth, ElementName=Player1Name}" 
+                                       HorizontalAlignment="Left" VerticalAlignment="Center" LastChildFill="True">
+                                <Viewbox>
+                                    <TextBlock DockPanel.Dock="Right" Padding="0,0,5,0" Width="25" 
+                                               HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right" 
+                                               Style="{StaticResource BaseTextBlock}"
+                                               Text="{Binding CurrentMatch.Player1CaptureDifferenceString, Mode=OneWay}"/>
+                                </Viewbox>
+                                <Border DockPanel.Dock="Left" BorderThickness="0">
+                                    <Canvas x:Name="Player1Captures" Height="15" ClipToBounds="True" />
+                                </Border>
+                            </DockPanel>
+                            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" 
+                                    BorderBrush="{StaticResource DefaultBorderBrush}">
+                                <Grid ClipToBounds="True">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <Viewbox Grid.Column="0">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5,0"
+                                                   Style="{StaticResource BaseTextBlock}" ToolTip="Match timer"
+                                                   Text="{Binding CurrentMatch.Player1GameTimerValueString}" />
+                                    </Viewbox>
+                                    <Viewbox Grid.Column="1">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5,0"
+                                                   Style="{StaticResource BaseTextBlock}" ToolTip="Move timer"
+                                                   Text="{Binding CurrentMatch.Player1MoveTimerValueString}" /> 
+                                    </Viewbox>
+                                    <Viewbox Grid.Column="2">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5,0"
+                                                   Style="{StaticResource BaseTextBlock}" ToolTip="Time increment" 
+                                                   Text="{Binding CurrentMatch.TimeIncrementString}"/>
+                                    </Viewbox>
+                                </Grid>
+                                
+                            </Border>
+                        </Grid>
+                    </Border>
+                    
+                    <Border DockPanel.Dock="Top" Width="{Binding Width, ElementName=GameInformationSidebar}" 
+                            Margin="0,5" CornerRadius="5" BorderBrush="{StaticResource DefaultBorderBrush}" 
+                            BorderThickness="1" Padding="5">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                            <TextBlock TextWrapping="NoWrap" FontSize="15">
+                            </TextBlock>
+                        </ScrollViewer>
+                    </Border>
+                </DockPanel>
                 </Border>
                 
-                <Border DockPanel.Dock="Bottom" Width="{Binding Width, ElementName=GameInformationSidebar}" 
-                        Height="80" Margin="0,5,10,10" CornerRadius="5" 
-                        BorderBrush="{StaticResource DefaultBorderBrush}" BorderThickness="1">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition Width="5"/>
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="3*" />
-                            <RowDefinition Height="2*" />
-                            <RowDefinition Height="30" />
-                        </Grid.RowDefinitions>
-                        
-                        <Border x:Name="Player1WinCountContainer" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" 
-                                BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="3">
-                            <TextBlock x:Name="Player1WinCount" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                       Style="{StaticResource BaseTextBlock}" Foreground="Black"
-                                       Text="{Binding Path=CurrentMatch.Player1ScoreString, Mode=OneWay}" />
-                        </Border>
-                        <TextBlock x:Name="Player1Name" Grid.Column="2" Grid.Row="0" VerticalAlignment="Top" 
-                                   Style="{StaticResource BaseTextBlock}"
-                                   Text="{Binding Path=CurrentMatch.Player1Name, Mode=OneWay}" />
-                        <DockPanel Grid.Column="2" Grid.Row="1" Width="{Binding ActualWidth, ElementName=Player1Name}" 
-                                   HorizontalAlignment="Left" VerticalAlignment="Center" LastChildFill="True">
-                            <TextBlock x:Name="Player1CapturesValue" DockPanel.Dock="Right" Padding="0,0,5,0" Width="25" 
-                                       HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right" Text=""/>
-                            <Border DockPanel.Dock="Left" BorderThickness="0">
-                                <Canvas x:Name="Player1Captures" Height="15" ClipToBounds="True" />
-                            </Border>
-                        </DockPanel>
-                        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" 
-                                BorderBrush="{StaticResource DefaultBorderBrush}">
-                            <Grid ClipToBounds="True">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                
-                                <TextBlock Grid.Column="0" x:Name="Player1MatchTimer" HorizontalAlignment="Center" 
-                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
-                                           ToolTip="Match timer"> 0:00 </TextBlock>
-                                <TextBlock Grid.Column="1" x:Name="Player1MoveTimer" HorizontalAlignment="Center" 
-                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
-                                           ToolTip="Move timer"> 0:00 </TextBlock>
-                                <TextBlock Grid.Column="2" x:Name="Player1TimeIncrement" HorizontalAlignment="Center" 
-                                           VerticalAlignment="Center" Style="{StaticResource BaseTextBlock}" 
-                                           ToolTip="Time increment"> +30s </TextBlock>
-                            </Grid>
-                            
-                        </Border>
-                    </Grid>
-                </Border>
-                
-                <Border DockPanel.Dock="Top" Width="{Binding Width, ElementName=GameInformationSidebar}" 
-                        Margin="0,5,10,5" CornerRadius="5" BorderBrush="{StaticResource DefaultBorderBrush}" 
-                        BorderThickness="1" Padding="5">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                        <TextBlock TextWrapping="NoWrap" FontSize="15">
-                        </TextBlock>
-                    </ScrollViewer>
-                </Border>
-            </DockPanel>
+            </Grid>
         </Border>
     </Grid>
 </Window>
