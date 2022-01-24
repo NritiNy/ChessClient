@@ -36,8 +36,7 @@ public readonly  struct Move {
     public int Start => _moveValue & StartMask;
     public int Target => (_moveValue & TargetMask) >> 6;
     public int MoveFlag => _moveValue >> 12;
-    public bool IsPromotion => MoveFlag == Flag.PromoteToQueen || MoveFlag == Flag.PromoteToRook ||
-                               MoveFlag == Flag.PromoteToKnight || MoveFlag == Flag.PromoteToBishop;
+    public bool IsPromotion => MoveFlag is Flag.PromoteToQueen or Flag.PromoteToRook or Flag.PromoteToKnight or Flag.PromoteToBishop;
 
 
     public override string ToString() {
