@@ -1,6 +1,6 @@
-﻿namespace ChessEngine; 
+﻿namespace ChessEngine.Moves; 
 
-public readonly  struct Move {
+public readonly struct Move {
 
     public readonly struct Flag {
         public const int None = 0;
@@ -17,8 +17,7 @@ public readonly  struct Move {
 
     private const ushort StartMask = 0b0000000000111111;
     private const ushort TargetMask = 0b0000111111000000;
-    private const ushort FlagMask = 0b1111000000000000;
-
+    
     public Move(ushort value) {
         _moveValue = value;
     }
@@ -27,8 +26,19 @@ public readonly  struct Move {
         _moveValue = (ushort) (start | (target << 6));
     }
     
-    public Move (int start, int target, int flag) {
+    public Move(int start, int target, int flag) {
         _moveValue = (ushort) (start | target << 6 | flag << 12);
+    }
+
+    public Move(string move) {
+        var startFile = move[0] - 97;
+        var startRank = move[1] - '0' - 1;
+        var targetFile = move[2] - 97;
+        var targetRank = move[3] - '0' - 1;
+
+        var start = startRank * 8 + startFile;
+        var target = targetRank * 8 + targetFile;
+        _moveValue = (ushort) (start | (target << 6));
     }
 
 
@@ -42,9 +52,9 @@ public readonly  struct Move {
     public override string ToString() {
         return $"{(char)(Start % 8 + 97)}{Start / 8 + 1} {(char)(Target % 8 + 97)}{Target / 8 + 1}";
     }
-    
 
-    public bool Equals(Move other) {
+
+    private bool Equals(Move other) {
         return Start  == other.Start && Target == other.Target;
     }
 

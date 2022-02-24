@@ -1,4 +1,6 @@
-﻿namespace ChessEngine.BoardRepresentation;
+﻿using ChessEngine.Moves;
+
+namespace ChessEngine.BoardRepresentation;
 
 public class Position {
     public static Position InitialPosition => new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -12,7 +14,6 @@ public class Position {
     public int ColorToMove;
     public bool WhiteToMove => ColorToMove == Color.White;
     public int OpponentColor => ColorToMove * 2 % 24;
-    public int ColorToMoveIndex => ColorToMove / 8 - 1;
 
 
     private Stack<uint> _gameStateHistory = new();
@@ -31,15 +32,14 @@ public class Position {
     public PieceList[] Pawns = null!;
 
     private PieceList[] _allPieceLists = Array.Empty<PieceList>();
+    
+    private const uint WhiteCastleKingSideMask = 0b0000000000000001;
+    private const uint WhiteCastleQueenSideMask = 0b0000000000000010;
+    private const uint BlackCastleKingSideMask = 0b0000000000000100;
+    private const uint BlackCastleQueenSideMask = 0b000000000001000;
 
-
-    private const uint WhiteCastleKingSideMask = 0b1111111111111110;
-    private const uint WhiteCastleQueenSideMask = 0b1111111111111101;
-    private const uint BlackCastleKingSideMask = 0b1111111111111011;
-    private const uint BlackCastleQueenSideMask = 0b1111111111110111;
-
-    private const uint WhiteCastleMask = WhiteCastleKingSideMask & WhiteCastleQueenSideMask;
-    private const uint BlackCastleMask = BlackCastleKingSideMask & BlackCastleQueenSideMask;
+    private const uint WhiteCastleMask = 0b0000000000001100;
+    private const uint BlackCastleMask = 0b0000000000000011;
 
     public bool WhiteCanCastleKingSide => (CurrentGameState & WhiteCastleKingSideMask) == 1 << 0;
     public bool WhiteCanCastleQueenSide => (CurrentGameState & WhiteCastleQueenSideMask) == 1 << 1;
@@ -47,9 +47,6 @@ public class Position {
     public bool BlackCanCastleQueenSide => (CurrentGameState & BlackCastleQueenSideMask) == 1 << 3;
 
     private PieceList GetPieceList(int pieceType, int colorIndex) => _allPieceLists[colorIndex * 8 + pieceType];
-
-    public ulong ZobristKey;
-    public Stack<ulong> PositionHistory = new();
 
 
     public Position(string? fenString = null) {
@@ -61,8 +58,6 @@ public class Position {
         KingSquare = new int[2];
 
         _gameStateHistory = new Stack<uint>();
-        ZobristKey = 0;
-        PositionHistory = new Stack<ulong>();
         _plyCount = 0;
         _fiftyMoveCounter = 0;
 
@@ -195,14 +190,14 @@ public class Position {
         // update castling rights
         if (oldCastleState != 0) {
             if (targetSquare == BoardUtility.H1 || startSquare == BoardUtility.H1) {
-                newCastleState &= WhiteCastleKingSideMask;
+                newCastleState &= 0b1110;
             } else if (targetSquare == BoardUtility.A1 || startSquare == BoardUtility.A1) {
-                newCastleState &= WhiteCastleQueenSideMask;
+                newCastleState &= 0b1101;
             }
             if (targetSquare == BoardUtility.H8 || startSquare == BoardUtility.H8) {
-                newCastleState &= BlackCastleKingSideMask;
+                newCastleState &= 0b1011;
             } else if (targetSquare == BoardUtility.A8 || startSquare == BoardUtility.A8) {
-                newCastleState &= BlackCastleQueenSideMask;
+                newCastleState &= 0b0111;
             }
         }
 
@@ -216,24 +211,20 @@ public class Position {
         
         // reset fifty move counter if applicable
         if (pieceType == Piece.Pawn || targetPieceType != Piece.None) {
-            PositionHistory.Clear();
             _fiftyMoveCounter = 0;
         }
         else {
-            PositionHistory.Push(ZobristKey);
             _fiftyMoveCounter++;
         }
     }
 
     public void UnmakeMove(Move move) {
-        //TODO: include Zobrist key
-        
-        var opponentColorIndex = ColorToMoveIndex;
-
+        var opponentColorIndex = ColorToMove / 8 - 1;
         ColorToMove = OpponentColor;
+        var colorIndex = ColorToMove / 8 - 1;
 
         var capturedPieceType = ((int) CurrentGameState >> 8) & 63;
-        var capturedPiece = capturedPieceType == 0 ? 0 : capturedPieceType | OpponentColor;
+        var capturedPiece = capturedPieceType == 0 ? Piece.None : capturedPieceType | OpponentColor;
 
         var startSquare = move.Start;
         var targetSquare = move.Target;
@@ -250,32 +241,32 @@ public class Position {
         }
         
         if (pieceType == Piece.King) {
-            KingSquare[ColorToMoveIndex] = startSquare;
+            KingSquare[colorIndex] = startSquare;
         } else if (!isPromotion) {
-            GetPieceList(pieceType, ColorToMoveIndex).MovePiece(targetSquare, startSquare);
+            GetPieceList(pieceType, colorIndex).MovePiece(targetSquare, startSquare);
         }
 
         Board[startSquare] = pieceType | ColorToMove;
         Board[targetSquare] = capturedPiece;
 
         if (isPromotion) {
-            Pawns[ColorToMoveIndex].AddPieceAtSquare(startSquare);
+            Pawns[colorIndex].AddPieceAtSquare(startSquare);
             switch (flag) {
                 case Move.Flag.PromoteToKnight:
-                    Knights[ColorToMoveIndex].RemovePieceAtSquare(targetSquare);
+                    Knights[colorIndex].RemovePieceAtSquare(targetSquare);
                     break;
                 case Move.Flag.PromoteToBishop:
-                    Bishops[ColorToMoveIndex].RemovePieceAtSquare(targetSquare);
+                    Bishops[colorIndex].RemovePieceAtSquare(targetSquare);
                     break;
                 case Move.Flag.PromoteToRook:
-                    Rooks[ColorToMoveIndex].RemovePieceAtSquare(targetSquare);
+                    Rooks[colorIndex].RemovePieceAtSquare(targetSquare);
                     break;
                 case Move.Flag.PromoteToQueen:
-                    Queens[ColorToMoveIndex].RemovePieceAtSquare(targetSquare);
+                    Queens[colorIndex].RemovePieceAtSquare(targetSquare);
                     break;
             }
         } else if (isEnPassant) {
-            var epIndex = targetSquare + (ColorToMove == Piece.White ? -8 : 8);
+            var epIndex = targetSquare + (ColorToMove == Color.White ? -8 : 8);
             Board[targetSquare] = 0;
             Board[epIndex] = capturedPiece;
             Pawns[opponentColorIndex].AddPieceAtSquare (epIndex);
@@ -287,15 +278,13 @@ public class Position {
             Board[castlingRookToIndex] = 0;
             Board[castlingRookFromIndex] = Piece.Rook | ColorToMove;
 
-            Rooks[ColorToMoveIndex].MovePiece (castlingRookToIndex, castlingRookFromIndex);
+            Rooks[colorIndex].MovePiece (castlingRookToIndex, castlingRookFromIndex);
         }
 
         _gameStateHistory.Pop();
         CurrentGameState = _gameStateHistory.Peek();
 
         _plyCount--;
-
-        if (PositionHistory.Count > 0) PositionHistory.Pop();
     }
 
     #region FEN conversion
