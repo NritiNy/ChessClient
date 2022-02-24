@@ -5,8 +5,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-using ChessEngine;
 using ChessEngine.BoardRepresentation;
+using ChessEngine.Moves;
+using ClientGUI.Play;
 using ChessColor = ChessEngine.BoardRepresentation.Color;
 
 
@@ -18,10 +19,10 @@ namespace ClientGUI {
         private int _orientation = ChessColor.White;
 
         // match statistics
-        public Match CurrentMatch { get; private set; }= new Match(); 
+        public AbstractMatch CurrentAbstractMatch { get; private set; } = new Analysis();
         
         // game statistics
-        private List<Move> _possibleMoves = new();
+        private List<Move> _possibleMoves;
         private bool[] _validMoves = new bool[64];
         private int _startSquare = -1;
         private int _targetSquare = -1;
@@ -30,11 +31,12 @@ namespace ClientGUI {
             InitializeComponent();
 
             DrawBoard();
-            _ = CurrentMatch.CurrentGame.GenerateLegalMoves(out _possibleMoves);
+            _possibleMoves = MoveGenerator.Instance.GenerateLegalMoves(CurrentAbstractMatch.CurrentGame.Position);
         }
 
 
         #region Update UI
+        
         private void DrawBoard() {
             foreach (var child in BoardGrid.Children) {
                 if (child is Button b) {
@@ -53,11 +55,15 @@ namespace ClientGUI {
                     } else if (_validMoves[rank * 8 + file]) {
                         color = isDarkSquare ? Brushes.Brown : Brushes.Crimson;
                     }
+
+                    /*if ((MoveGenerator.Instance._opponentAttackMap >> square & 1) != 0)
+                        color = Brushes.Green;*/
+
                     b.Background = color;
 
                     var pos = _orientation == ChessColor.White ? rank * 8 + file : (7 - rank) * 8 + 7 - file;
-                    var piece = Piece.PieceType(CurrentMatch.CurrentGame.Board[pos]);
-                    var pieceColor = Piece.Color(CurrentMatch.CurrentGame.Board[pos]);
+                    var piece = Piece.PieceType(CurrentAbstractMatch.CurrentGame.Board[pos]);
+                    var pieceColor = Piece.Color(CurrentAbstractMatch.CurrentGame.Board[pos]);
 
                     if (piece > Piece.None) {
                         var resourceKey = pieceColor == ChessColor.White ? "White" : "Black";
@@ -89,14 +95,11 @@ namespace ClientGUI {
                 }
             }
         }
-
-        private void UpdateGameInformation() {
-            
-        }
+        
         #endregion
 
-        #region Event Handlers
-
+        #region Handle Resizing events
+        
         private void AdjustBoardSize() {
             var availableHeight = BoardContainer.ActualHeight;
             var availableWidth = Math.Min(BoardContainer.ActualWidth,
@@ -113,14 +116,17 @@ namespace ClientGUI {
         }
         
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e) => AdjustBoardSize();
-
+        
         private void SidebarExpanded(object sender, RoutedEventArgs e) {
             try {
                 AdjustBoardSize();
             }
-            catch { }
+            catch {
+                // ignored
+            }
         }
-
+        
+        #endregion
 
         private void SquareClicked(object sender, RoutedEventArgs e) {
             if (sender is not Button b) return;
@@ -137,7 +143,7 @@ namespace ClientGUI {
             }
 
             void HandleStartSquareClicked() {
-                if (!Piece.IsColor(CurrentMatch.CurrentGame.Board[rank * 8 + file], CurrentMatch.CurrentGame.ColorToMove) || CurrentMatch.CurrentGame.Board[rank * 8 + file] == Piece.None) {
+                if (!Piece.IsColor(CurrentAbstractMatch.CurrentGame.Board[rank * 8 + file], CurrentAbstractMatch.CurrentGame.ColorToMove) || CurrentAbstractMatch.CurrentGame.Board[rank * 8 + file] == Piece.None) {
                     _startSquare = -1;
                     _targetSquare = -1;
                     
@@ -157,19 +163,22 @@ namespace ClientGUI {
             void HandleTargetSquareClicked() {
                 _validMoves = new bool[64];
                 
-                if (Piece.IsColor(CurrentMatch.CurrentGame.Board[rank * 8 + file], CurrentMatch.CurrentGame.ColorToMove)) {
+                if (Piece.IsColor(CurrentAbstractMatch.CurrentGame.Board[rank * 8 + file], CurrentAbstractMatch.CurrentGame.ColorToMove)) {
                     HandleStartSquareClicked();
                     
                     return;
                 }
                 
                 _targetSquare = rank * 8 + file;
-                var move = new Move(_startSquare, _targetSquare);
-
-                if (CurrentMatch.CurrentGame.IsLegalMove(move)) {
-                    CurrentMatch.CurrentGame.MakeMove(move);
-
-                    _ = CurrentMatch.CurrentGame.GenerateLegalMoves(out _possibleMoves);
+                var tmpMove = new Move(_startSquare, _targetSquare);
+                var allMoves = MoveGenerator.Instance.GenerateLegalMoves(CurrentAbstractMatch.CurrentGame.Position);
+                
+                foreach (var move in allMoves) {
+                    if (move == tmpMove) {
+                        CurrentAbstractMatch.CurrentGame.MakeMove(move);
+                        _possibleMoves = MoveGenerator.Instance.GenerateLegalMoves(CurrentAbstractMatch.CurrentGame.Position);
+                        break;
+                    }
                 }
 
                 DrawBoard();
@@ -185,12 +194,29 @@ namespace ClientGUI {
             }
         }
         
-        #endregion
+        
 
+        #region Handle Sidebar events
+
+        private void NewGame(object sender, RoutedEventArgs e) {
+            var newGame = new NewGameWindow() {
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+            var result = newGame.ShowDialog();
+            if (result.HasValue  && result.Value) newGame.StartNewGame(); 
+        }
+        
         private void OpenSettings(object sender, RoutedEventArgs e) {
-            var settings = new SettingsWindow();
+            var settings = new SettingsWindow {
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
             var result = settings.ShowDialog();
             if (result.HasValue  && result.Value) settings.ApplySettings(); 
         }
+        #endregion
+
+        
+        
+        
     }
 }

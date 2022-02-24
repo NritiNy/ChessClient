@@ -6,7 +6,7 @@ namespace ClientGUI {
     /// </summary>
     public partial class App : Application {
         private void CloseWindowClicked(object sender, RoutedEventArgs e) {
-            this.MainWindow?.Close();
+            MainWindow?.Close();
         }
 
         private void MaximiseWindowClicked(object sender, RoutedEventArgs e) {
