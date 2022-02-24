@@ -1,38 +1,35 @@
 ﻿namespace ChessEngine.BoardRepresentation; 
 
 public class PieceList {
-    
-    public readonly int[] OccupiedSquares;
+    private readonly int[] _occupiedSquares;
     private readonly int[] _map;
-    private int _numPieces;
 
     public PieceList (int maxPieceCount = 16) {
-        OccupiedSquares = new int[maxPieceCount];
+        _occupiedSquares = new int[maxPieceCount];
         _map = new int[64];
-        _numPieces = 0;
+        Count = 0;
     }
 
-    public int Count => _numPieces;
+    public int Count { get; private set; }
 
     public void AddPieceAtSquare (int square) {
-        OccupiedSquares[_numPieces] = square;
-        _map[square] = _numPieces;
-        _numPieces++;
+        _occupiedSquares[Count] = square;
+        _map[square] = Count;
+        Count++;
     }
 
     public void RemovePieceAtSquare (int square) {
         var pieceIndex = _map[square]; 
-        OccupiedSquares[pieceIndex] = OccupiedSquares[_numPieces - 1]; 
-        _map[OccupiedSquares[pieceIndex]] = pieceIndex; 
-        _numPieces--;
+        _occupiedSquares[pieceIndex] = _occupiedSquares[Count - 1]; 
+        _map[_occupiedSquares[pieceIndex]] = pieceIndex; 
+        Count--;
     }
 
     public void MovePiece (int startSquare, int targetSquare) {
         var pieceIndex = _map[startSquare]; 
-        OccupiedSquares[pieceIndex] = targetSquare;
+        _occupiedSquares[pieceIndex] = targetSquare;
         _map[targetSquare] = pieceIndex;
     }
 
-    public int this [int index] => OccupiedSquares[index];
-
+    public int this [int index] => _occupiedSquares[index];
 }

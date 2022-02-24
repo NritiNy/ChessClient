@@ -1,5 +1,11 @@
 ﻿namespace ChessEngine.BoardRepresentation;
 
+public static class Color
+{
+    public const int White = 8;
+    public const int Black = 16;
+}
+
 public static class Piece
 {
     public const int None = 0;
@@ -9,9 +15,6 @@ public static class Piece
     public const int Bishop = 4;
     public const int Rook = 5;
     public const int Queen = 6;
-
-    public const int White = 8;
-    public const int Black = 16;
 
     private const int TypeMask = 0b00111;
     private const int BlackMask = 0b10000;
@@ -25,8 +28,3 @@ public static class Piece
     public static int PieceType(int piece) => piece & TypeMask;
 }
 
-public static class Color
-{
-    public const int White = 8;
-    public const int Black = 16;
-}

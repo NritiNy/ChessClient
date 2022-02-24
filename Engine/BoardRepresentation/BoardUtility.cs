@@ -1,19 +1,6 @@
 ﻿namespace ChessEngine.BoardRepresentation;
 
 
-public struct Coordinate {
-    public readonly int FileIndex;
-    public readonly int RankIndex;
-
-    public Coordinate (int fileIndex, int rankIndex) {
-        FileIndex = fileIndex;
-        RankIndex = rankIndex;
-    }
-
-    public bool IsLightSquare () => (FileIndex + RankIndex) % 2 != 0;
-}
-
-
 public static class BoardUtility {
 
     public const string FileNames = "abcdefgh";
@@ -42,25 +29,4 @@ public static class BoardUtility {
     public static int RankIndex (int squareIndex) => squareIndex >> 3;
     
     public static int FileIndex (int squareIndex) => squareIndex & 0b000111;
-
-    public static bool IsLightSquare (int fileIndex, int rankIndex) => (fileIndex + rankIndex) % 2 != 0;
-    
-    
-    public static int IndexFromCoord (int fileIndex, int rankIndex) => rankIndex * 8 + fileIndex;
-
-    public static int IndexFromCoord (Coordinate coordinate) {
-        return IndexFromCoord (coordinate.FileIndex, coordinate.RankIndex);
-    }
-
-    public static Coordinate CoordFromIndex (int squareIndex) {
-        return new Coordinate (FileIndex (squareIndex), RankIndex (squareIndex));
-    }
-    
-    
-    public static string SquareName(int fileIndex, int rankIndex) => FileNames[fileIndex] + "" + (rankIndex + 1);
-    public static string SquareName(int squareIndex) => SquareName(CoordFromIndex (squareIndex));
-    public static string SquareName(Coordinate coord) => SquareName(coord.FileIndex, coord.RankIndex);
-    
-    
-    public static bool BitboardContainsSquare(ulong bitboard, int squareIndex) => ((bitboard >> squareIndex) & 1) != 0;
 }
